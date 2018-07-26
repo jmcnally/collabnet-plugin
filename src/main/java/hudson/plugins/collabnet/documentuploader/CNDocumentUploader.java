@@ -19,6 +19,8 @@ import hudson.plugins.collabnet.util.CommonUtil;
 import hudson.remoting.VirtualChannel;
 import hudson.tasks.BuildStepMonitor;
 import hudson.util.FormValidation;
+
+import org.jenkinsci.remoting.RoleChecker;
 import org.kohsuke.stapler.DataBoundConstructor;
 import org.kohsuke.stapler.QueryParameter;
 
@@ -218,7 +220,7 @@ public class CNDocumentUploader extends AbstractTeamForgeNotifier {
     private Action createAction(int numUploaded, CTFDocumentFolder folder) {
         String displaymsg = "Download from CollabNet Documents";
         return new CnduResultAction(displaymsg, 
-                                    IMAGE_URL + "cn-icon.gif", 
+                                    IMAGE_URL + "CollabNetDocuments.png", 
                                     "console",
                                     folder.getURL(),
                                     numUploaded);
@@ -358,7 +360,7 @@ public class CNDocumentUploader extends AbstractTeamForgeNotifier {
         } else {
             return folder.createDocument(fileName,
                                this.getInterpreted(build, this.getDescription()),
-                               null, "final", false, fileName, 
+                               "", "final", false, fileName,
                                mimeType, file, null, null);
         }
     }
@@ -380,7 +382,14 @@ public class CNDocumentUploader extends AbstractTeamForgeNotifier {
                         return "text/plain";
                     }
                     return new MimetypesFileTypeMap().getContentType(f);
-                }});
+                }
+
+                @Override
+                public void checkRoles(RoleChecker arg0)
+                    throws SecurityException {
+                    // TODO Auto-generated method stub
+                }
+            });
         } catch (IOException ioe) { // ignore exceptions
         } catch (InterruptedException ie) {}
         return mimeType;
@@ -471,6 +480,11 @@ public class CNDocumentUploader extends AbstractTeamForgeNotifier {
         public String invoke(File f, VirtualChannel channel) throws IOException {
             CollabNetApp cnApp = CNHudsonUtil.recreateCollabNetApp(mUrl, mUsername, mSessionId);
             return cnApp.upload(f).getId();
+        }
+
+        @Override
+        public void checkRoles(RoleChecker arg0) throws SecurityException {
+            // TODO Auto-generated method stub
         }
     }
 

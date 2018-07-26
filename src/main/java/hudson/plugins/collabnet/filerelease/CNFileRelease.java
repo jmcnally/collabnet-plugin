@@ -24,6 +24,7 @@ import hudson.remoting.VirtualChannel;
 import hudson.tasks.BuildStepMonitor;
 import hudson.util.ComboBoxModel;
 import hudson.util.FormValidation;
+import org.jenkinsci.remoting.RoleChecker;
 import org.kohsuke.stapler.DataBoundConstructor;
 import org.kohsuke.stapler.QueryParameter;
 
@@ -43,6 +44,8 @@ public class CNFileRelease extends AbstractTeamForgeNotifier {
     private transient BuildListener listener = null;
 
     private static final String IMAGE_URL = "/plugin/collabnet/images/48x48/";
+    private static final String RELEASE_STATUS_ACTIVE = "active";
+    private static final String MATURITY_NONE = "";
     
     // collabNet object
     private transient CollabNetApp cna = null;
@@ -52,6 +55,7 @@ public class CNFileRelease extends AbstractTeamForgeNotifier {
     private String release;
     private boolean overwrite;
     private FilePattern[] file_patterns;
+    private String description = "";
 
     /**
      * Creates a new CNFileRelease object.
@@ -193,7 +197,7 @@ public class CNFileRelease extends AbstractTeamForgeNotifier {
     public CnfrResultAction createAction(int numUploaded, CTFRelease release) {
         String displaymsg = "Download from CollabNet File Release System";
         return new CnfrResultAction(displaymsg,
-                                    IMAGE_URL + "cn-icon.gif", 
+                                    IMAGE_URL + "CollabNetFrs.png", 
                                     "console",
                                     release.getUrl(),
                                     numUploaded);
@@ -309,6 +313,11 @@ public class CNFileRelease extends AbstractTeamForgeNotifier {
             CollabNetApp cnApp = CNHudsonUtil.recreateCollabNetApp(mServerUrl, mUsername, mSessionId);
             return cnApp.upload(f).getId();
         }
+
+        @Override
+        public void checkRoles(RoleChecker arg0) throws SecurityException {
+            // TODO Auto-generated method stub
+        }
     }
 
     /**
@@ -388,10 +397,13 @@ public class CNFileRelease extends AbstractTeamForgeNotifier {
         }
         CTFRelease release = pkg.getReleaseByTitle(getRelease());
         if (release == null) {
-            this.logConsole("Critical Error: releaseId cannot be found for " +
-                     this.getRelease() + ".  " +
-                     "Setting build status to UNSTABLE (or worse).");
-            return null;
+            release = pkg.createRelease(getRelease(), description,
+                                        RELEASE_STATUS_ACTIVE, MATURITY_NONE);
+            this.logConsole("Note: releaseId cannot be found for " +
+                            this.getRelease() + ".  " +
+                            "Creating a new release with specified releaseId." +
+                            " Setting build status to STABLE.");
+            return release;
         }
         return release;
     }
@@ -455,7 +467,7 @@ public class CNFileRelease extends AbstractTeamForgeNotifier {
          * JSON string into the response data.
          */
         public ComboBoxModel doFillReleaseItems(CollabNetApp cna,
-                @QueryParameter String project, @QueryParameter("package") String _package) throws RemoteException {
+                @QueryParameter String project, @QueryParameter("pkg") String _package) throws RemoteException {
             return ComboBoxUpdater.getReleases(cna,project,_package);
         }
     }

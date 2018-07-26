@@ -3,10 +3,10 @@
   <parent>
     <groupId>org.jenkins-ci.plugins</groupId>
     <artifactId>plugin</artifactId>
-    <version>1.397</version>
+    <version>1.645</version>
   </parent>
   <artifactId>collabnet</artifactId>
-  <version>1.1.7-SNAPSHOT</version>
+  <version>2.0.6-SNAPSHOT</version>
   <name>CollabNet Plugins</name>
   <description>CollabNet packages</description>
   <url>http://wiki.jenkins-ci.org/display/JENKINS/CollabNet+Plugin</url>
@@ -20,7 +20,7 @@
   </developers>
 
   <properties>
-    <compile.java.version>1.6</compile.java.version>
+    <compile.java.version>1.8</compile.java.version>
     <hudson.plugin.version>1.23</hudson.plugin.version>
   </properties>
 
@@ -29,9 +29,92 @@
       <id>collabnet-libs</id>
       <url>file:${project.basedir}/lib</url>
     </repository>
+    <repository>
+      <id>repo.jenkins-ci.org</id>
+      <url>https://repo.jenkins-ci.org/public/</url>
+    </repository>
   </repositories>
 
   <dependencies>
+    <dependency>
+       <groupId>org.eclipse.aether</groupId>
+       <artifactId>aether-api</artifactId>
+       <version>1.1.0</version>
+     </dependency>
+     <dependency>
+       <groupId>org.jenkins-ci.lib</groupId>
+       <artifactId>lib-jenkins-maven-embedder</artifactId>
+       <version>3.9</version>
+       <exclusions>
+         <exclusion>
+           <groupId>org.sonatype.sisu</groupId>
+           <artifactId>sisu-guice</artifactId>
+         </exclusion>
+       </exclusions>
+      </dependency>  
+    <dependency>
+          <groupId>com.google.guava</groupId>
+          <artifactId>guava</artifactId>
+          <version>13.0.1</version>
+    </dependency>
+    <dependency>
+      <groupId>com.rabbitmq</groupId>
+      <artifactId>amqp-client</artifactId>
+      <version>3.6.5</version>
+    </dependency>
+    <dependency>
+         <groupId>org.easymock</groupId>
+         <artifactId>easymock</artifactId>
+         <version>3.4</version>
+         <scope>test</scope>
+    </dependency>
+    <dependency>
+         <groupId>joda-time</groupId>
+         <artifactId>joda-time</artifactId>
+         <version>1.5.2</version>
+    </dependency>
+    <dependency>
+         <groupId>org.jenkins-ci.plugins</groupId>
+         <artifactId>junit</artifactId>
+         <version>1.4</version>
+    </dependency>
+    <dependency>
+         <groupId>org.apache.httpcomponents</groupId>
+         <artifactId>httpclient</artifactId>
+         <version>4.5.2</version>
+    </dependency>
+    <dependency>
+          <groupId>commons-validator</groupId>
+          <artifactId>commons-validator</artifactId>
+          <version>1.4.0</version>
+    </dependency>
+    <dependency>
+          <groupId>axis</groupId>
+          <artifactId>axis</artifactId>
+          <version>1.4</version>
+          <scope>runtime</scope>
+    </dependency>
+    <dependency>
+      <groupId>com.google.code.findbugs</groupId>
+      <artifactId>annotations</artifactId>
+      <version>2.0.1</version>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.maven</groupId>
+      <artifactId>maven-embedder</artifactId>
+      <version>3.1.1</version>
+      <exclusions>
+         <exclusion>
+           <groupId>org.sonatype.sisu</groupId>
+           <artifactId>sisu-guice</artifactId>
+         </exclusion>
+      </exclusions>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.commons</groupId>
+      <artifactId>commons-lang3</artifactId>
+      <version>3.0</version>
+    </dependency>
     <dependency>
       <groupId>org.apache.axis</groupId>    
       <artifactId>axis</artifactId>
@@ -69,9 +152,9 @@
       <version>1.0</version>
     </dependency>
     <dependency>
-      <groupId>com.collabnet.ce.soap50.webservices</groupId>
-      <artifactId>sf_soap50_sdk</artifactId>
-      <version>1.2</version>
+      <groupId>com.collabnet.ce.soap60.webservices</groupId>
+      <artifactId>sf_soap60_sdk</artifactId>
+      <version>1.1</version>
     </dependency>
     <dependency>
       <groupId>org.jvnet.hudson.plugins</groupId>
@@ -99,11 +182,72 @@
       <version>2.5</version>
       <scope>provided</scope>
     </dependency>
+    <dependency>
+      <groupId>org.mockito</groupId>
+      <artifactId>mockito-core</artifactId>
+      <version>2.2.0</version>
+    </dependency>
+    <dependency>
+      <groupId>com.fasterxml.jackson.core</groupId>
+      <artifactId>jackson-annotations</artifactId>
+      <version>2.6.5</version>
+    </dependency>
+    <dependency>
+      <groupId>com.fasterxml.jackson.core</groupId>
+      <artifactId>jackson-core</artifactId>
+      <version>2.6.5</version>
+    </dependency>
+    <dependency>
+      <groupId>com.fasterxml.jackson.core</groupId>
+      <artifactId>jackson-databind</artifactId>
+      <version>2.6.5</version>
+    </dependency>
+    <dependency>
+      <groupId>org.projectlombok</groupId>
+      <artifactId>lombok</artifactId>
+      <version>1.16.10</version>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.jenkins-ci.plugins.workflow</groupId>
+      <artifactId>workflow-job</artifactId>
+      <version>2.9</version>
+    </dependency>
+    <dependency>
+      <groupId>org.jenkins-ci.plugins.workflow</groupId>
+      <artifactId>workflow-cps</artifactId>
+      <version>2.8</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.jenkins-ci.plugins</groupId>
+      <artifactId>credentials</artifactId>
+      <version>1.22</version>
+    </dependency>
   </dependencies>
+
+  <distributionManagement>
+    <repository>
+      <uniqueVersion>false</uniqueVersion>
+      <id>maven.jenkins-ci.org</id>
+      <url>https://repo.jenkins-ci.org/releases/</url>
+    </repository>
+    <snapshotRepository>
+      <id>maven.jenkins-ci.org</id>
+      <url>https://repo.jenkins-ci.org/snapshots/</url>
+    </snapshotRepository>
+  </distributionManagement>
 
   <build>
     <finalName>CollabNet-${project.version}</finalName>
     <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-javadoc-plugin</artifactId>
+        <configuration>
+          <additionalparam>-Xdoclint:none</additionalparam>
+        </configuration>
+      </plugin>
       <plugin>
         <artifactId>maven-surefire-plugin</artifactId>
         <configuration>
@@ -209,6 +353,11 @@
           </systemProperties>
         </configuration>
       </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-release-plugin</artifactId>
+        <version>2.5.1</version>
+      </plugin>
     </plugins>
   </build>
 
@@ -216,6 +365,7 @@
     <connection>scm:git:git://github.com/jenkinsci/collabnet-plugin.git</connection>
     <developerConnection>scm:git:git@github.com:jenkinsci/collabnet-plugin.git</developerConnection>
     <url>https://github.com/jenkinsci/collabnet-plugin</url>
+    <tag>HEAD</tag>
   </scm>
 
     <pluginRepositories>
